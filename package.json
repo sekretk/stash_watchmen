@@ -1,0 +1,19 @@
+{
+  "name": "stash_watchmen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sekretk/stash_watchmen.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sekretk/stash_watchmen/issues"
+  },
+  "homepage": "https://github.com/sekretk/stash_watchmen#readme"
+}
