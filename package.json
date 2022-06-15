@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "start": "ts-node ./src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/sekretk/stash_watchmen/issues"
   },
-  "homepage": "https://github.com/sekretk/stash_watchmen#readme"
+  "homepage": "https://github.com/sekretk/stash_watchmen#readme",
+  "devDependencies": {
+    "ts-node": "^10.8.1"
+  }
 }
