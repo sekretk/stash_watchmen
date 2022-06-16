@@ -4,6 +4,8 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { DB, JIRA_URL, STASH_URL } from './const';
 import { Commit, PR, Project, Ticket, Version } from './contract';
 
+dotenv.config();
+
 type WatchedPR = {
     id: number,
     jira: string,
@@ -19,7 +21,7 @@ const jira_version_url = () => `${JIRA_URL}/version/`;
 
 const jira_ticket_url = (ticket: string) => `${JIRA_URL}/issue/${ticket}`;
 
-const extract_jira = (prName: string): string => '';
+const extract_jira = (prName: string): string => prName.match(new RegExp(`${process.env.prefix}-\\d*`, 'g'))?.[0] ?? '';
 
 const db: Array<WatchedPR> = existsSync(DB) ? JSON.parse(readFileSync(DB, { encoding: 'utf8' })) : [];
 
@@ -30,7 +32,7 @@ const writeDB = (prs: Array<WatchedPR>) => {
 const createNextVersion = async (lastReleased: string): Promise<Version> => {
     const vers = Number(lastReleased.split('.')[1]);
     const nextV = lastReleased.split('.')[0] + '.' + (vers + 1).toString();
-    const newVersion: Version =  await fetch(jira_version_url(), {
+    const newVersion: Version = await fetch(jira_version_url(), {
         method: 'POST',
         body: JSON.stringify({
             "description": "An auto incremented verrsion",
@@ -44,6 +46,8 @@ const createNextVersion = async (lastReleased: string): Promise<Version> => {
             'Content-Type': 'application/json',
         },
     }).then(_ => _.json());
+
+    console.log('createNextVersion', newVersion);
 
     return newVersion;
 }
@@ -62,6 +66,8 @@ const handleFallout = async (jira: string): Promise<void> => {
         .filter(_ => _.name.startsWith(process.env.version ?? ''))
         .filter(_ => !_.archived);
 
+    console.log('handleFallout#versions', versions.map(_ => _.name).join(' - '));
+
     let nextVersion: Version;
 
     if (versions.filter(_ => !_.released).length > 0) {
@@ -69,6 +75,8 @@ const handleFallout = async (jira: string): Promise<void> => {
     } else {
         nextVersion = await createNextVersion(versions[versions.length - 1].name);
     }
+
+    console.log('handleFallout#nextVersion', nextVersion);
 
     const ticket: Ticket = await fetch(jira_ticket_url(jira), {
         method: 'GET',
@@ -92,11 +100,10 @@ const handleFallout = async (jira: string): Promise<void> => {
                 Authorization: 'Basic ' + token,
                 'Content-Type': 'application/json',
             },
-        }).then(_ => _.json());
+        });
     }
 }
 
-dotenv.config();
 
 const token = Buffer.from(`${process.env.user}:${process.env.password}`).toString('base64');
 
@@ -112,6 +119,7 @@ const run = async () => {
         })
         .then(_ => _.json());
 
+    console.log('PRs', prs.values.map(_ => _.id).join('; '));
 
     const falledOutPRs = db.filter(_ => prs.values.every(pr => pr.id !== _.id));
 
@@ -129,27 +137,9 @@ const run = async () => {
     )
     );
 
+    console.log('DB', prCommits);
+
     writeDB(prCommits);
-
-
-    // const commits: Array<Commit> = []
-
-    // prs.values.forEach(async ({ id }) => {
-    //     const commit = await fetch(
-    //         `https://stash.in.devexperts.com/rest/api/1.0/projects/RIA/repos/dxtf/pull-requests/${id}/commits?limit=100`,
-    //         {
-    //             method: 'GET',
-    //             headers: {
-    //                 Authorization: 'Basic ' + token,
-    //                 'Content-Type': 'application/json',
-    //             },
-    //         })
-    //         .then(_ => _.json());
-
-    //     commits.push(commit);
-    // })
-
-    // console.log(commits);
 }
 
 run();

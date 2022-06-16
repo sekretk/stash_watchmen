@@ -2,46 +2,41 @@
   {
     "id": 19959,
     "lastCommit": "36c5a40b191be768848e9a1d54a7a4beae04f08f",
-    "jira": ""
+    "jira": "DXTF-29129"
   },
   {
     "id": 19957,
     "lastCommit": "0a127219aa40183fd5e4560077d5295e046c8f96",
-    "jira": ""
+    "jira": "DXTF-28060"
   },
   {
     "id": 19956,
     "lastCommit": "a31be5a0bf5e07571921f0c68c40323b5e6c9a98",
-    "jira": ""
+    "jira": "DXTF-28922"
   },
   {
     "id": 19045,
     "lastCommit": "8a51aff86eddae94d1eda2733af31dd852342409",
-    "jira": ""
-  },
-  {
-    "id": 19911,
-    "lastCommit": "831a74dfd2b7b22b1964e5c1aed75abe1d398ac4",
-    "jira": ""
+    "jira": "DXTF-27778"
   },
   {
     "id": 19722,
     "lastCommit": "ee8ca54015b44406323a062315ecd38f238a60a8",
-    "jira": ""
+    "jira": "DXTF-28583"
   },
   {
     "id": 19652,
     "lastCommit": "3617bb018c5ee1f3aef3e04b9482a4f29d802cbf",
-    "jira": ""
+    "jira": "DXTF-27773"
   },
   {
     "id": 19485,
     "lastCommit": "bf86c6b845f2a0e14d8fbebae4ab23fb7df05673",
-    "jira": ""
+    "jira": "DXTF-27775"
   },
   {
     "id": 19511,
     "lastCommit": "c9a5141ec163937213b32ba9eb636d5e05f2f3a2",
-    "jira": ""
+    "jira": "DXTF-27638"
   }
 ]

@@ -21,7 +21,9 @@ export type Project = {
 }
 
 export type Ticket = {
+    key: string,
     fields: {
-        fixVersions: Array<{name: string}>
+        fixVersions: Array<{name: string}>,
+        labels: Array<string>
     }
 }
