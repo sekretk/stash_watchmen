@@ -66,8 +66,6 @@ const handleFallout = async (jira: string): Promise<void> => {
         .filter(_ => _.name.startsWith(process.env.version ?? ''))
         .filter(_ => !_.archived);
 
-    console.log('handleFallout#versions', versions.map(_ => _.name).join(' - '));
-
     let nextVersion: Version;
 
     if (versions.filter(_ => !_.released).length > 0) {
@@ -86,8 +84,10 @@ const handleFallout = async (jira: string): Promise<void> => {
         },
     }).then(_ => _.json());
 
+    console.log('handleFallout#ticket', ticket.fields.fixVersions);
+
     if (ticket.fields.fixVersions.every(_ => _.name !== nextVersion.name)) {
-        await fetch(jira_ticket_url(jira), {
+        const updateResult = await fetch(jira_ticket_url(jira), {
             method: 'PUT',
             body: JSON.stringify({
                 fields: {
@@ -101,6 +101,8 @@ const handleFallout = async (jira: string): Promise<void> => {
                 'Content-Type': 'application/json',
             },
         });
+
+        updateResult.ok && console.log(`Ticket ${ticket.key} is updated with version by merged PR to ${nextVersion.name}`)
     }
 }
 
@@ -123,7 +125,7 @@ const run = async () => {
 
     const falledOutPRs = db.filter(_ => prs.values.every(pr => pr.id !== _.id));
 
-    falledOutPRs.map(_ => _.jira).filter(Boolean).forEach(handleFallout);
+    await Promise.all(falledOutPRs.map(_ => _.jira).filter(Boolean).map(handleFallout));
 
     const prCommits: Array<WatchedPR> = await Promise.all(prs.values.map(_ => fetch(pr_commits_url(_.id), {
         method: 'GET',
@@ -136,8 +138,6 @@ const run = async () => {
         .then(commits => ({ id: _.id, lastCommit: commits.values[0].id, jira: extract_jira(_.title) }))
     )
     );
-
-    console.log('DB', prCommits);
 
     writeDB(prCommits);
 }

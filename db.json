@@ -1,18 +1,13 @@
 [
   {
-    "id": 19959,
-    "lastCommit": "36c5a40b191be768848e9a1d54a7a4beae04f08f",
-    "jira": "DXTF-29129"
+    "id": 19956,
+    "lastCommit": "aab66b634d4734bb25981e931150e1b87650d1e1",
+    "jira": "DXTF-28922"
   },
   {
     "id": 19957,
     "lastCommit": "0a127219aa40183fd5e4560077d5295e046c8f96",
     "jira": "DXTF-28060"
-  },
-  {
-    "id": 19956,
-    "lastCommit": "a31be5a0bf5e07571921f0c68c40323b5e6c9a98",
-    "jira": "DXTF-28922"
   },
   {
     "id": 19045,
