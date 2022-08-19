@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "pr:version": "ts-node ./src/pr.ts",
-    "label:remove": "ts-node ./src/label_remove.ts"
+    "label:remove": "ts-node ./src/label_remove.ts",
+    "watch": "pm2 start 'npm run pr:version' --cron-restart=\"0/30 8-20 * * 1-5\" --no-autorestart"
   },
   "repository": {
     "type": "git",

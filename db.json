@@ -1,37 +1,26 @@
 [
-  {
-    "id": 19956,
-    "lastCommit": "aab66b634d4734bb25981e931150e1b87650d1e1",
-    "jira": "DXTF-28922"
-  },
-  {
-    "id": 19957,
-    "lastCommit": "0a127219aa40183fd5e4560077d5295e046c8f96",
-    "jira": "DXTF-28060"
-  },
-  {
-    "id": 19045,
-    "lastCommit": "8a51aff86eddae94d1eda2733af31dd852342409",
-    "jira": "DXTF-27778"
-  },
-  {
-    "id": 19722,
-    "lastCommit": "ee8ca54015b44406323a062315ecd38f238a60a8",
-    "jira": "DXTF-28583"
-  },
-  {
-    "id": 19652,
-    "lastCommit": "3617bb018c5ee1f3aef3e04b9482a4f29d802cbf",
-    "jira": "DXTF-27773"
-  },
-  {
-    "id": 19485,
-    "lastCommit": "bf86c6b845f2a0e14d8fbebae4ab23fb7df05673",
-    "jira": "DXTF-27775"
-  },
-  {
-    "id": 19511,
-    "lastCommit": "c9a5141ec163937213b32ba9eb636d5e05f2f3a2",
-    "jira": "DXTF-27638"
-  }
+  [
+    20346,
+    "88772fae5016ac46851a1356b29c2ef24e8d3120"
+  ],
+  [
+    20333,
+    "0ff98ad2d14f0c4c1c947df66f310e329e9daa18"
+  ],
+  [
+    20329,
+    "61dd4a1fe6ada000691fbc85d7a8b0e259ad0231"
+  ],
+  [
+    20301,
+    "a9ab5177047aedbbd193da7561b1fe2375da0ebf"
+  ],
+  [
+    20318,
+    "da7f93bae3131c071b3493abff3704f26604fbe5"
+  ],
+  [
+    20305,
+    "5ae11fc6c5b2e61028b147282478d1fddc42a257"
+  ]
 ]

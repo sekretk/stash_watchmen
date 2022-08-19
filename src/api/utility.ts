@@ -1,0 +1,1 @@
+export const token = Buffer.from(`${process.env.user}:${process.env.password}`).toString('base64');
