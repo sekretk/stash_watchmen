@@ -1,13 +1,12 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import { get, put, token } from './api';
-import { CASCADES, JIRA_URL } from './const';
+import { CASCADES, FAILURE_PR_TITLE, JIRA_URL } from './const';
 import { Activity, PR, Project, Ticket, Version } from './contract';
 import { writeDB } from './db';
-import { applyRule, prCheckRules } from './rules';
-import { merged_prs_url, opened_prs_url, pr_activities } from './urls';
-
-const toFullBranchId = (version: string) => `refs/heads/release/${version}`;
+import { applyRule, openPullRequestCheckRules } from './rules';
+import { extract_jira, jira_project_url, jira_ticket_url, jira_version_url, merged_prs_url, opened_prs_url, pr_activities } from './urls';
+import { toFullBranchId } from './utils';
 
 let project: Project;
 
@@ -19,12 +18,6 @@ const isTargetVersion = (version: string) => (candidate: Version): boolean => {
 
 const TARGET_VERSIONS: Array<string> = process.env.versions?.split(';') ?? [];
 
-const jira_project_url = () => `${JIRA_URL}/project/${process.env.jiraproject}`;
-const jira_version_url = () => `${JIRA_URL}/version/`;
-
-const jira_ticket_url = (ticket: string) => `${JIRA_URL}/issue/${ticket}`;
-
-const extract_jira = (prName: string): string => prName.match(new RegExp(`${process.env.prefix}-\\d*`, 'g'))?.[0] ?? '';
 
 const createNextVersion = async (version: string): Promise<Version> => {
     const nextVerNum = project.versions
@@ -91,6 +84,7 @@ const populateProject = async () => {
 }
 
 const checkJira = async () => {
+
     TARGET_VERSIONS.forEach(async version => {
         const currentVersions: Array<Version> = project.versions.filter(isTargetVersion(version));
 
@@ -140,20 +134,19 @@ const checkOpenedPRs = async () => {
     const prsRequest = await get<{ values: Array<PR> }>(opened_prs_url);
 
     //filter out PRs creaed by user or user in reviwers
-    const rpsToReview = prsRequest.values.filter(pr => pr.reviewers.some(rev => rev.user.name === process.env.user) || pr.author.user.name === process.env.user);
+    //const rpsToReview = prsRequest.values.filter(pr => pr.reviewers.some(rev => rev.user.name === process.env.user) || pr.author.user.name === process.env.user);
+    const rpsToReview = prsRequest.values;
 
     await rpsToReview.forEach(async pr => {
         const activities = await get<{ values: Array<Activity> }>(pr_activities(pr.id));
 
-        await Promise.all(prCheckRules.map(applyRule).map(async check => await check(pr, activities.values)));
-    });   
+        await Promise.all(openPullRequestCheckRules.map(applyRule).map(async check => await check(pr, activities.values)));
+    });
 
     writeDB(rpsToReview.map(_ => ([_.id, _.fromRef.latestCommit])));
 
     console.log('Opened PR with review: ', rpsToReview.map(_ => _.id).join(' - '));
 }
-
-
 
 const main = async () => {
     console.log('PR versions sync is started')

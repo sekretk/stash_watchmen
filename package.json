@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "deleteme": "ts-node ./src/test.ts",
     "pr:version": "ts-node ./src/pr.ts",
+    "experiment": "ts-node ./src/test.ts",
     "label:remove": "ts-node ./src/label_remove.ts",
     "watch": "pm2 start 'npm run pr:version' --cron-restart=\"0/30 8-20 * * 1-5\" --no-autorestart"
   },
@@ -24,7 +26,10 @@
     "ts-node": "^10.8.1"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "cross-fetch": "^3.1.5",
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "fp-ts": "^2.12.2",
+    "io-ts": "^2.2.17"
   }
 }

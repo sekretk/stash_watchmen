@@ -1,3 +1,6 @@
+import { string } from "fp-ts";
+import * as t from 'io-ts'
+
 export type User = {
     name: string
 }
@@ -34,6 +37,7 @@ export type PR = {
 export type Commit = {
     id: string,
     authorTimestamp: number,
+    version: number
 }
 
 export type StashListResult<T> = {
@@ -58,6 +62,19 @@ export type Ticket = {
         labels: Array<string>
     }
 }
+
+export type CreatedTicketSuccess = {
+    "id": string,
+    "key": string,
+    "self": string
+};
+
+export type CreatedTicketResponse = {
+    "errorMessages": Array<any>,
+    "errors": Record<string, string>
+} | CreatedTicketSuccess;
+
+export const createdTicketSuccessGuard = (response: CreatedTicketResponse): response is CreatedTicketSuccess => !('errors' in response);
 
 type Comment = {
     id: number,
@@ -96,5 +113,19 @@ export type Activity = {
 export type Rule = {
     name: string,
     multipleApply: boolean,
-    check: (pr: PR) => Promise<{text: string, force: boolean} | undefined>
-} 
+    check: (pr: PR) => Promise<{ text: string, force: boolean } | undefined>
+}
+
+export const EnvironmentDecoder = t.type({
+    user: t.string,
+    password: t.string,
+    project: t.string,
+    repo: t.string,
+    jiraproject: t.string,
+    versions: t.string,
+    prefix: t.string,
+});
+
+export type Environment = t.OutputOf<typeof EnvironmentDecoder>;
+
+export type KeyValue<T,R> = [T, R];

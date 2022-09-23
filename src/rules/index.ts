@@ -3,12 +3,14 @@ import { post } from "../api";
 import { APP_NAME } from "../const";
 import { Activity, PR, Rule } from "../contract";
 import { comment_pr_url } from "../urls";
+import { jiraTicketForFailureRule } from "./jiraToFix";
 import { commitsCount } from "./manyCommits";
 import { noUnapprovedChangesRule } from "./noUnapprovedChanges";
 
-export const prCheckRules: Array<Rule> = [
+export const openPullRequestCheckRules: Array<Rule> = [
     noUnapprovedChangesRule,
-    commitsCount
+    commitsCount,
+    jiraTicketForFailureRule
 ]
 
 export const applyRule = (rule: Rule) => async (pr: PR, activities: Array<Activity>) => {

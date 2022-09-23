@@ -9,6 +9,10 @@ export const commitsCount: Rule = {
     multipleApply: false,
     check: async (pr: PR) => {
 
+        if (pr.reviewers.every(_ => _.user.name !== process.env.user)) {
+            return Promise.resolve(undefined);
+        }
+
         const commits = await get<StashListResult<Commit>>(pr_commits_url(pr.id))
 
         if (commits.size > MAX_COMMITS) {
