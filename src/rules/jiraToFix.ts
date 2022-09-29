@@ -6,7 +6,7 @@ import { toFullBranchId } from "../utils";
 
 export const jiraTicketForFailureRule: Rule = {
     name: 'FAILURE_PR_TO_HANDLE',
-    multipleApply: false,
+    applience: 'once',
     check: async (pr: PR) => {
 
         if (pr.title !== FAILURE_PR_TITLE) {

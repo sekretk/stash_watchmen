@@ -8,6 +8,8 @@
     "deleteme": "ts-node ./src/test.ts",
     "pr:version": "ts-node ./src/pr.ts",
     "experiment": "ts-node ./src/test.ts",
+    "fpex": "ts-node ./src/fp-exp.ts",
+    "runbuild": "ts-node ./src/build-test.ts",
     "label:remove": "ts-node ./src/label_remove.ts",
     "watch": "pm2 start 'npm run pr:version' --cron-restart=\"0/30 8-20 * * 1-5\" --no-autorestart"
   },

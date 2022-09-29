@@ -137,13 +137,19 @@ const checkOpenedPRs = async () => {
     //const rpsToReview = prsRequest.values.filter(pr => pr.reviewers.some(rev => rev.user.name === process.env.user) || pr.author.user.name === process.env.user);
     const rpsToReview = prsRequest.values;
 
-    await rpsToReview.forEach(async pr => {
+    const prReviewResults = await Promise.all(rpsToReview.map(async pr => {
         const activities = await get<{ values: Array<Activity> }>(pr_activities(pr.id));
 
-        await Promise.all(openPullRequestCheckRules.map(applyRule).map(async check => await check(pr, activities.values)));
-    });
+        const prResults = await Promise.all(openPullRequestCheckRules.map(async rule => {
+            const ruleApplienceResult = await applyRule(pr, activities.values, rule);
+            console.log('XXX RES', pr.id, pr.fromRef.latestCommit, activities.values.length, rule.name, ruleApplienceResult)
+            return {[rule.name]: ruleApplienceResult};
+        }));
 
-    writeDB(rpsToReview.map(_ => ([_.id, _.fromRef.latestCommit])));
+        return [pr.id, prResults.reduce((acc, cur) => ({...acc, ...cur}), {})] as const;
+    }));
+
+    writeDB(prReviewResults);
 
     console.log('Opened PR with review: ', rpsToReview.map(_ => _.id).join(' - '));
 }

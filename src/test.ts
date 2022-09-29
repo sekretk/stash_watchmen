@@ -148,14 +148,41 @@ type PullRequestCheckResult = {
     }
 }
 
- 
+type RuleContext = Environment & {pr: PR, activities: Array<Activity>};
 
 type PullRequestValidationRule = {
     name: string,
-    applience: 'none' | 'once' | 'one-comment' | 'for-each-run',
-    createTask: boolean,
-    check: (pr: PR) => TE.TaskEither<Error, PullRequestCheckResult>
+    check: (env: RuleContext) => TE.TaskEither<RuleExecutionError, PullRequestCheckResult>
 }
+
+type RuleExecutionError = Error & { conditionallyStopped: boolean };
+
+const OnlyMeAsReviewer = (ctx: RuleContext): TE.TaskEither<Error, void> => pipe(
+    ctx,
+    TE.of,
+    TE.mapLeft(e => (...e, conditionallyStopped: false)),
+    TE.chain(_ => _.pr.id === 1 ? TE.left() : TE.of(undefined)),
+    TE.map(_ => _;)
+)
+
+const ruleImplentation: PullRequestValidationRule = {
+    name: 'RULE',
+    check: (env) => pipe(
+        env,
+        TE.of,
+        TE.chain(_ => _.)
+    )
+}
+
+const prRules = (pr: PR): Array<PullRequestValidationRule> => {}
+
+const runRule = (rule: PullRequestValidationRule): TE.TaskEither<Error, void> => 
+
+const runPRCheck = pipe(
+    TE.of({pr: {} as PR}),
+    TE.bind('activities', flow(pick('pr'), pick('id'), getPRActivities)),
+    TE.chain(_ => pipe(_.pr, prRules, array.map(runRule),  TE.sequenceSeqArray))
+)
 
 const rules: Array<PullRequestValidationRule> = [];
 
@@ -185,7 +212,7 @@ const updateDB = <T extends {results: Map<number, readonly PullRequestCheckResul
 }, e => new Error(`Error happend on update DB, ${e}`))
 
 const handleError = (error: Error): T.Task<string> =>
-    () => Promise.resolve(`Error happend: ${error.message}`);
+    () => Promise.resolve(`Error happends: ${error.message}`);
 
 const handleResults = <T extends { prs: Array<PR> }>(env: T): T.Task<string> =>
     () => Promise.resolve(`SUCCESS PRs: ${env.prs.map(pick('id')).join('; ')} handled`);

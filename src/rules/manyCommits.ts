@@ -6,9 +6,8 @@ const MAX_COMMITS = 5;
 
 export const commitsCount: Rule = {
     name: 'COMMITS_NUMBER',
-    multipleApply: false,
+    applience: 'once',
     check: async (pr: PR) => {
-
         if (pr.reviewers.every(_ => _.user.name !== process.env.user)) {
             return Promise.resolve(undefined);
         }

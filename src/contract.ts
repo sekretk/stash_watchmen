@@ -100,6 +100,7 @@ export type Activity = {
     "comment": {
         "id": number,
         "text": string,
+        "version": number,
         "author": {
             "name": string,
         },
@@ -112,8 +113,8 @@ export type Activity = {
 
 export type Rule = {
     name: string,
-    multipleApply: boolean,
-    check: (pr: PR) => Promise<{ text: string, force: boolean } | undefined>
+    applience: 'once' | 'replace' | 'constantly',
+    check: (pr: PR, payload: any | undefined) => Promise<{ text?: string, force?: boolean, payload?: any } | undefined>
 }
 
 export const EnvironmentDecoder = t.type({
