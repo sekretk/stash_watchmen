@@ -160,9 +160,10 @@ type RuleExecutionError = Error & { conditionallyStopped: boolean };
 const OnlyMeAsReviewer = (ctx: RuleContext): TE.TaskEither<Error, void> => pipe(
     ctx,
     TE.of,
-    TE.mapLeft(e => (...e, conditionallyStopped: false)),
-    TE.chain(_ => _.pr.id === 1 ? TE.left() : TE.of(undefined)),
-    TE.map(_ => _;)
+    TE.chain(_ => _.pr.id === 1 ? TE.of(undefined) : TE.of(undefined))
+    //TE.mapLeft(e => ({...e, conditionallyStopped: false})),
+    //TE.chain(_ => _.pr.id === 1 ? TE.left() : TE.of(undefined)),
+    // TE.map(_ => )
 )
 
 const ruleImplentation: PullRequestValidationRule = {
